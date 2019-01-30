@@ -1,0 +1,33 @@
+version: '2'
+services:
+  pantheon:
+    image: pegasyseng/pantheon:0.9.1
+    volumes:
+      - ./pantheon/key:/var/lib/pantheon/key:ro
+      - ./pantheon/genesis.json:/etc/pantheon/genesis.json:ro
+    command:
+      --miner-enabled
+      --miner-coinbase=0xd7ab485b40f45f4298c9f597f7d4c001857efb3a
+      --min-gas-price=0
+      --rpc-http-enabled=true
+      --rpc-http-api=ADMIN,ETH,NET,WEB3,CLIQUE,IBFT,DEBUG,MINER
+      --rpc-http-cors-origins=*
+      --rpc-ws-enabled=true
+      --host-whitelist=*
+    ports:
+     - "8545:8545"
+  parity:
+    image: cbainnovationlab/parity:1.9.5
+    volumes:
+      - ./parity:/parity/config:ro
+    command:
+      --chain /parity/config/chain-spec.json
+      --jsonrpc-interface "0.0.0.0"
+      --jsonrpc-cors "*"
+      --no-ui
+      --gas-floor-target 34359738368
+      --gas-cap 34359738368
+      --gasprice 0
+      --reseal-min-period 0
+    ports:
+     - "8545:8545"
